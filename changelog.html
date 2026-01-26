@@ -212,7 +212,7 @@
             border-color: var(--primary);
         }
 
-        /* Google Translate Styling Hack - FINAL FORM V2 */
+        /* Google Translate Styling Hack - FINAL FORM V3 */
         #google_translate_element {
             display: inline-block;
             vertical-align: middle;
@@ -288,9 +288,13 @@
         /* Attempt to style the popup (limited by iframe) */
         .goog-te-menu-frame {
             top: 60px !important;
-            /* Push it down below navbar */
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
             border: 1px solid var(--border) !important;
+
+            /* BRICK FIX: Constrain dimensions */
+            max-width: 300px !important;
+            max-height: 400px !important;
+            overflow-y: auto !important;
         }
     </style>
 </head>
@@ -376,6 +380,19 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             loadChangelog();
+
+            // --- GOOGLE TRANSLATE HACKS (JS EDITION) ---
+            const observer = new MutationObserver((mutations) => {
+                const banner = document.querySelector('.goog-te-banner-frame');
+                if (banner) banner.remove();
+
+                if (document.body.style.top !== '0px') {
+                    document.body.style.top = '0px';
+                    document.body.style.position = 'static';
+                }
+            });
+
+            observer.observe(document.body, { attributes: true, childList: true, subtree: true });
         });
     </script>
 
