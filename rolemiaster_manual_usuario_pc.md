@@ -36,14 +36,6 @@ Puedes gestionar y descargar modelos desde **Configuración → IA Local Integra
 | **Qwen2.5-14B** | ~10GB | **16GB** | S | 🌟 Premium. Narrativa rica, diálogos naturales. |
 | **Qwen2.5-32B** | ~22GB | **32GB** | S+ | 👑 Máxima calidad. Requiere RTX 4090 o superior. |
 
-#### 🎭 Familia Mistral (Alternativa Creativa)
-
-| Modelo | Tamaño | VRAM Mínima | Tier | Experiencia de Juego |
-|--------|--------|-------------|------|----------------------|
-| **Mistral-7B** | ~5.5GB | **12GB** | A | ✅ Alta creatividad. Estilo más "literario". |
-| **Mistral-Nemo-12B** | ~8GB | **14GB** | A+ | 🌟 Excelente para diálogos complejos. |
-| **Mixtral-8x7B** | ~26GB | **36GB** | S | 👑 Muy potente. Solo hardware de gama alta. |
-
 ---
 
 ### 🎮 ¿QUÉ MODELO ELEGIR?

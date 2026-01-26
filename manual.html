@@ -33,6 +33,8 @@
             color: var(--text-main);
             line-height: 1.6;
             overflow-x: hidden;
+            top: 0 !important;
+            position: static !important;
         }
 
         h1,
@@ -290,22 +292,25 @@
             border-color: var(--primary);
         }
 
-        /* Google Translate Styling Hack - FINAL FORM */
+        /* Google Translate Styling Hack - FINAL FORM V2 */
         #google_translate_element {
             display: inline-block;
             vertical-align: middle;
         }
 
-        /* HIDE THE ANNOYING TOP BANNER */
-        .goog-te-banner-frame.skiptranslate {
+        /* FORCE HIDE BANNER */
+        .goog-te-banner-frame {
             display: none !important;
+            visibility: hidden !important;
+            height: 0 !important;
         }
 
         body {
             top: 0px !important;
+            position: static !important;
         }
 
-        /* Style the 'Select Language' Button */
+        /* Widget Styling */
         .goog-te-gadget-simple {
             background-color: transparent !important;
             border: 1px solid var(--border) !important;
@@ -315,18 +320,21 @@
             font-size: 1rem !important;
             cursor: pointer;
             transition: all 0.3s;
+            display: flex !important;
+            align-items: center;
         }
 
         .goog-te-gadget-simple:hover {
             border-color: var(--primary) !important;
         }
 
-        /* Text Colors inside the widget */
+        /* Override Text Colors */
         .goog-te-gadget-simple a,
         .goog-te-gadget-simple span,
         .goog-te-menu-value span {
             color: var(--text-muted) !important;
             text-decoration: none !important;
+            font-weight: normal !important;
         }
 
         .goog-te-gadget-simple:hover a,
@@ -335,20 +343,37 @@
             color: var(--primary) !important;
         }
 
-        /* Hide Google Icon & Separator */
+        /* Clean up widget content */
         .goog-te-gadget-icon {
             display: none !important;
         }
 
-        .goog-te-menu-value span:last-child {
+        .goog-te-menu-value span:first-child {
+            display: block;
+            padding-right: 5px;
+        }
+
+        /* Language Name */
+        .goog-te-menu-value span:nth-child(2) {
             display: none !important;
         }
 
-        /* Hide the arrow if possible or separator */
+        /* Separator */
+        .goog-te-menu-value span:nth-child(3) {
+            display: none !important;
+        }
 
-        /* Popup Menu Styling (Hard to override as it's an iframe, but we try) */
+        /* 'Translate' text */
+
+        /* Attempt to style the popup (limited by iframe) 
+           We move it down so it doesn't cover the navbar immediately, 
+           but we can't style the internal white brick easily. 
+        */
         .goog-te-menu-frame {
-            box-shadow: 0 0 20px rgba(0, 210, 255, 0.2) !important;
+            top: 60px !important;
+            /* Push it down below navbar */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+            border: 1px solid var(--border) !important;
         }
     </style>
 
