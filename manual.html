@@ -312,7 +312,7 @@
     <div class="doc-container">
         <!-- Sidebar Navigation -->
         <aside class="sidebar">
-            <h3>Contenido</h3>
+            <h3><span id="sidebar-title">Contenido</span></h3>
             <ul id="toc-list">
                 <!-- Generated dynamically -->
                 <li style="color: grey; padding: 10px;">Cargando índice...</li>
@@ -334,18 +334,22 @@
 
     <!-- Main Logic -->
     <script>
-        let currentPlatform = 'pc';
-        let currentLang = 'es';
+        // Load preferences or defaults
+        let currentPlatform = localStorage.getItem('rolemiaster_platform') || 'pc';
+        let currentLang = localStorage.getItem('rolemiaster_lang') || 'es';
 
         function switchPlatform(plat) {
             currentPlatform = plat;
+            localStorage.setItem('rolemiaster_platform', plat);
             updateButtons();
             loadManual();
         }
 
         function switchLanguage(lang) {
             currentLang = lang;
+            localStorage.setItem('rolemiaster_lang', lang);
             updateButtons();
+            updateLabels();
             loadManual();
         }
 
@@ -359,13 +363,21 @@
             document.getElementById('btn-' + currentLang).classList.add('active');
         }
 
+        function updateLabels() {
+            const sidebarTitle = document.getElementById('sidebar-title');
+            if (sidebarTitle) {
+                sidebarTitle.textContent = currentLang === 'en' ? 'Contents' : 'Contenido';
+            }
+        }
+
         function loadManual() {
             const contentDiv = document.getElementById('manual-content');
             const tocList = document.getElementById('toc-list');
             // Filename format: rolemiaster_manual_usuario_pc_es.md
             const manualFile = `rolemiaster_manual_usuario_${currentPlatform}_${currentLang}.md`;
 
-            contentDiv.innerHTML = '<div style="text-align: center; margin-top: 50px;"><h2 style="color: var(--primary);">Cargando... / Loading...</h2></div>';
+            const loadingText = currentLang === 'en' ? 'Loading...' : 'Cargando...';
+            contentDiv.innerHTML = `<div style="text-align: center; margin-top: 50px;"><h2 style="color: var(--primary);">${loadingText}</h2></div>`;
 
             fetch(manualFile + '?t=' + new Date().getTime())
                 .then(response => {
@@ -379,11 +391,14 @@
                 })
                 .catch(error => {
                     console.error(error);
+                    const errorHeader = currentLang === 'en' ? 'Error' : 'Error';
+                    const errorMsg = currentLang === 'en' ? 'File not found' : 'No se encontró el archivo';
+
                     contentDiv.innerHTML = `<div style="color: var(--secondary); text-align: center; padding: 2rem;">
-                        <h3>Error</h3><p>${error.message}</p>
-                        <p>No se encontró el archivo / File not found: <strong>${manualFile}</strong></p>
+                        <h3>${errorHeader}</h3><p>${error.message}</p>
+                        <p>${errorMsg}: <strong>${manualFile}</strong></p>
                     </div>`;
-                    tocList.innerHTML = '<li>Error / Error</li>';
+                    tocList.innerHTML = '<li>Error</li>';
                 });
         }
 
@@ -391,10 +406,12 @@
             const tocList = document.getElementById('toc-list');
             tocList.innerHTML = '';
 
+            const emptyText = currentLang === 'en' ? 'No sections' : 'Sin secciones';
+
             const headers = document.querySelectorAll('#manual-content h1, #manual-content h2');
 
             if (headers.length === 0) {
-                tocList.innerHTML = '<li>-</li>';
+                tocList.innerHTML = `<li>${emptyText}</li>`;
                 return;
             }
 
@@ -426,6 +443,8 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            updateButtons();
+            updateLabels();
             loadManual();
         });
     </script>
