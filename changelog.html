@@ -263,17 +263,20 @@
     </div>
 
     <script>
-        let currentPlatform = 'pc';
-        let currentLang = 'es';
+        // Load preferences or defaults
+        let currentPlatform = localStorage.getItem('rolemiaster_platform') || 'pc';
+        let currentLang = localStorage.getItem('rolemiaster_lang') || 'es';
 
         function switchPlatform(plat) {
             currentPlatform = plat;
+            localStorage.setItem('rolemiaster_platform', plat);
             updateButtons();
             loadChangelog();
         }
 
         function switchLanguage(lang) {
             currentLang = lang;
+            localStorage.setItem('rolemiaster_lang', lang);
             updateButtons();
             loadChangelog();
         }
@@ -293,7 +296,8 @@
             // Filename format: changelog_produccion_pc_es.md
             const changelogFile = `changelog_produccion_${currentPlatform}_${currentLang}.md`;
 
-            contentDiv.innerHTML = '<div class="loading">Cargando... / Loading...</div>';
+            const loadingText = currentLang === 'en' ? 'Loading...' : 'Cargando...';
+            contentDiv.innerHTML = `<div class="loading">${loadingText}</div>`;
 
             marked.setOptions({ breaks: true, gfm: true });
 
@@ -307,16 +311,20 @@
                 })
                 .catch(error => {
                     console.error('Error:', error);
+                    const errorHeader = currentLang === 'en' ? 'Load Error' : 'Error de Carga';
+                    const errorMsg = currentLang === 'en' ? 'File not found' : 'No se encontró el changelog';
+
                     contentDiv.innerHTML = `
                         <div class="error-msg">
-                            <h3>Error de Carga / Load Error</h3>
-                            <p>File not found: ${changelogFile}</p>
+                            <h3>${errorHeader}</h3>
+                            <p>${errorMsg}: ${changelogFile}</p>
                         </div>
                     `;
                 });
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            updateButtons();
             loadChangelog();
         });
     </script>
