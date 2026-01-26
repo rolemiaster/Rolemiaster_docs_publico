@@ -257,6 +257,8 @@
             <a href="index.html">Inicio</a>
             <a href="manual.html" class="active">Manual</a>
             <a href="changelog.html">Changelog</a>
+            <!-- Google Translate Container -->
+            <div id="google_translate_element" style="margin-left: 20px;"></div>
         </div>
     </nav>
 
@@ -264,33 +266,115 @@
         <!-- Sidebar Navigation -->
         <aside class="sidebar">
             <h3>Contenido</h3>
-            <ul>
-                <li><a href="#intro" class="active">Introducción</a></li>
-                <li><a href="#install">Instalación</a></li>
-                <li><a href="#getting-started">Primeros Pasos</a></li>
-                <li><a href="#interface">Interfaz</a></li>
-                <li><a href="#game-modes">Modos de Juego</a></li>
-                <li><a href="#faq">Preguntas Frecuentes</a></li>
+            <ul id="toc-list">
+                <!-- Generated dynamically -->
+                <li style="color: grey; padding: 10px;">Cargando índice...</li>
             </ul>
         </aside>
 
         <!-- Main Content Area -->
         <main class="content">
-            <h1 id="intro">Manual de Usuario</h1>
-            <p>Bienvenido al manual oficial de <strong>RolemIAster</strong>, el juego de rol infinito potenciado por
-                Inteligencia Artificial.</p>
-
-            <h2 id="install">Instalación</h2>
-            <p>Descarga el instalador desde Steam o usa nuestra versión Beta para Android.</p>
-            <p>...</p>
-
-            <h2 id="getting-started">Primeros Pasos</h2>
-            <p>Al iniciar el juego por primera vez, se te pedirá configurar...</p>
-            <p>...</p>
-
-            <!-- More content placeholders -->
+            <div id="manual-content">
+                <div style="text-align: center; margin-top: 50px;">
+                    <h2 style="color: var(--primary);">Cargando Manual...</h2>
+                </div>
+            </div>
         </main>
     </div>
+
+    <!-- External Libs -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- Google Translate Script -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'es',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript"
+        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <!-- Main Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const contentDiv = document.getElementById('manual-content');
+            const tocList = document.getElementById('toc-list');
+            const manualFile = 'rolemiaster_manual_usuario.md';
+
+            // 1. Fetch Markdown
+            fetch(manualFile + '?t=' + new Date().getTime())
+                .then(response => {
+                    if (!response.ok) throw new Error("No se pudo cargar el manual (" + response.status + ")");
+                    return response.text();
+                })
+                .then(markdown => {
+                    // 2. Render Markdown
+                    marked.setOptions({ breaks: true, gfm: true });
+                    contentDiv.innerHTML = marked.parse(markdown);
+
+                    // 3. Generate Sidebar TOC
+                    generateTOC();
+
+                    // 4. Highlight Code Blocks (Optional, simple style applied via CSS already)
+                })
+                .catch(error => {
+                    console.error(error);
+                    contentDiv.innerHTML = `<div style="color: var(--secondary); text-align: center; padding: 2rem;">
+                        <h3>Error</h3><p>${error.message}</p>
+                        <p>Asegúrate de que <code>${manualFile}</code> existe en la carpeta Web.</p>
+                    </div>`;
+                    tocList.innerHTML = '<li>Error de carga</li>';
+                });
+        });
+
+        function generateTOC() {
+            const tocList = document.getElementById('toc-list');
+            tocList.innerHTML = ''; // Clear loading
+
+            const headers = document.querySelectorAll('#manual-content h1, #manual-content h2');
+
+            if (headers.length === 0) {
+                tocList.innerHTML = '<li>Sin secciones</li>';
+                return;
+            }
+
+            headers.forEach((header, index) => {
+                // Ensure ID
+                if (!header.id) {
+                    header.id = 'section-' + index;
+                }
+
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + header.id;
+                a.textContent = header.textContent;
+
+                // Indent H2
+                if (header.tagName === 'H2') {
+                    a.style.paddingLeft = '20px';
+                    a.style.fontSize = '0.95rem';
+                } else {
+                    a.style.fontWeight = 'bold';
+                }
+
+                // Smooth Scroll
+                a.onclick = (e) => {
+                    e.preventDefault();
+                    document.getElementById(header.id).scrollIntoView({ behavior: 'smooth' });
+                    // Update Active
+                    document.querySelectorAll('.sidebar a').forEach(link => link.classList.remove('active'));
+                    a.classList.add('active');
+                };
+
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+    </script>
 
 </body>
 
