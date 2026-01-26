@@ -2,12 +2,18 @@
 26/01/2026 19:38 - Launcher Web & RTX 50 Support - Beta_v047
 ****************************************************************************************************
 - Novedades:
+
+  > [!IMPORTANTE]
+  > **POR MOTIVOS DE COMPATIBILIDAD, ES NECESARIO ELIMINAR LA DB PREVIA O DE LO CONTRARIO ES MUY PROBABLE QUE DE ERRORES EN LA CONFIGURACIÓN IA**
+  > **(Solución: Click en el icono de engranaje ⚙️ del Launcher -> Borrar Base de Datos)**
+
   *Soporte Crítico para RTX Serie 50: Solucionado un error grave que provocaba el cierre inesperado al intentar generar personajes en las nuevas tarjetas gráficas NVIDIA (RTX 5070, 5080, 5090).
   (Como no dispongo de una RTX de la serie 5000 no he podido probar directamente si la solución es 100%, pero la teoría es que debería estar solucionado. ¡Espero vuestros cánticos de victoria aquí!)
   
   *Actualización del Motor de IA: Hemos actualizado el cerebro local del juego para que sea compatible con la última tecnología de hardware, asegurando que todos puedan disfrutar de la experiencia sin conexión, sin importar lo moderno que sea su equipo.
   
   *Nuevo Launcher: Actualizaciones y noticias en tiempo real desde la web oficial.
+
 
 ****************************************************************************************************
 26/01/2026 06:49 - Integración Web Documentación - Beta_v045

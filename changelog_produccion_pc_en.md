@@ -2,11 +2,17 @@
 26/01/2026 19:38 - Launcher Web & RTX 50 Support - Beta_v047
 ****************************************************************************************************
 - What's New:
+
+  > [!IMPORTANT]
+  > **DUE TO COMPATIBILITY REASONS, IT IS NECESSARY TO DELETE THE PREVIOUS DB, OTHERWISE IT IS VERY LIKELY TO CAUSE ERRORS IN AI CONFIGURATION**
+  > **(Solution: Click on the Launcher gear icon ⚙️ -> Delete Database)**
+
   *RTX 50 Critical Fix: Fixed a critical crash when generating characters on new NVIDIA GPUs (RTX 5070, 5080, 5090).
   (Since I don't own an RTX 50-series card, I couldn't test this fix directly, but in theory, it should be solved. I await your victory chants here!)
 
   *AI Engine Update: Upgraded local AI brain for maximum compatibility with latest hardware.
   *New Launcher: Real-time news and updates from the official website.
+
 
 ****************************************************************************************************
 26/01/2026 06:49 - Integración Web Documentación - Beta_v045
