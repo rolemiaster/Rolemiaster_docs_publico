@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Usuario - RolemIAster</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Roboto:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00d2ff;
+            /* Cyberpunk Blue */
+            --secondary: #ff0055;
+            /* Cyberpunk Pink */
+            --bg-dark: #0a0a12;
+            --bg-panel: #161622;
+            --text-main: #e0e0e0;
+            --text-muted: #a0a0a0;
+            --border: #2a2a35;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Rajdhani', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-main);
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: #fff;
+            text-shadow: 0 0 10px var(--primary);
+        }
+
+        /* Navigation - Copied from index.html for consistency */
+        nav {
+            background: rgba(10, 10, 18, 0.95);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 500;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary);
+        }
+
+        /* Documentation Layout */
+        .doc-container {
+            display: flex;
+            margin-top: 80px;
+            /* Offset for fixed header */
+            min-height: calc(100vh - 80px);
+            /* Full height minus header */
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 300px;
+            background: var(--bg-panel);
+            border-right: 1px solid var(--border);
+            padding: 2rem;
+            position: fixed;
+            top: 80px;
+            bottom: 0;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        .sidebar h3 {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar li a {
+            color: var(--text-muted);
+            display: block;
+            padding: 5px 0;
+        }
+
+        .sidebar li a:hover,
+        .sidebar li a.active {
+            color: var(--primary);
+            padding-left: 5px;
+        }
+
+        /* Main Content */
+        .content {
+            flex-grow: 1;
+            padding: 2rem 4rem;
+            margin-left: 300px;
+            /* Width of sidebar */
+            max-width: 1200px;
+            /* Readability limit */
+        }
+
+        .content h1 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 1rem;
+        }
+
+        .content h2 {
+            font-size: 2rem;
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+
+        .content p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            color: #d0d0d0;
+        }
+
+        .content ul,
+        .content ol {
+            margin-bottom: 1.5rem;
+            margin-left: 2rem;
+            color: #d0d0d0;
+        }
+
+        .content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .content code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+            color: var(--secondary);
+            border: 1px solid var(--border);
+        }
+
+        .content pre {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+        }
+
+        .content pre code {
+            background: transparent;
+            padding: 0;
+            color: var(--text-main);
+            border: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .doc-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                position: relative;
+                top: 0;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                height: auto;
+                max-height: 200px;
+            }
+
+            .content {
+                margin-left: 0;
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="index.html" class="logo">
+            <img src="https://lh3.googleusercontent.com/d/1v1KGBnV6JTR2wVSUWwRN07nMLgg98WBZ" alt="RolemIAster Logo">
+            <span>RolemIAster</span>
+        </a>
+        <div class="nav-links">
+            <a href="index.html">Inicio</a>
+            <a href="manual.html" class="active">Manual</a>
+            <a href="changelog.html">Changelog</a>
+        </div>
+    </nav>
+
+    <div class="doc-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <h3>Contenido</h3>
+            <ul>
+                <li><a href="#intro" class="active">Introducción</a></li>
+                <li><a href="#install">Instalación</a></li>
+                <li><a href="#getting-started">Primeros Pasos</a></li>
+                <li><a href="#interface">Interfaz</a></li>
+                <li><a href="#game-modes">Modos de Juego</a></li>
+                <li><a href="#faq">Preguntas Frecuentes</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="content">
+            <h1 id="intro">Manual de Usuario</h1>
+            <p>Bienvenido al manual oficial de <strong>RolemIAster</strong>, el juego de rol infinito potenciado por
+                Inteligencia Artificial.</p>
+
+            <h2 id="install">Instalación</h2>
+            <p>Descarga el instalador desde Steam o usa nuestra versión Beta para Android.</p>
+            <p>...</p>
+
+            <h2 id="getting-started">Primeros Pasos</h2>
+            <p>Al iniciar el juego por primera vez, se te pedirá configurar...</p>
+            <p>...</p>
+
+            <!-- More content placeholders -->
+        </main>
+    </div>
+
+</body>
+
+</html>

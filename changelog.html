@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Changelog - RolemIAster</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Roboto:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        :root {
+            --primary: #00d2ff;
+            --secondary: #ff0055;
+            --bg-dark: #0a0a12;
+            --bg-panel: #161622;
+            --text-main: #e0e0e0;
+            --text-muted: #a0a0a0;
+            --border: #2a2a35;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Rajdhani', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-main);
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: #fff;
+            font-size: 1.8rem;
+            border-left: 4px solid var(--secondary);
+            padding-left: 10px;
+            margin-top: 3rem;
+        }
+
+        h3 {
+            color: var(--primary);
+            font-size: 1.4rem;
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #fff;
+            text-shadow: 0 0 10px var(--primary);
+        }
+
+        nav {
+            background: rgba(10, 10, 18, 0.95);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            font-weight: 500;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.1rem;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 100px auto 4rem;
+            padding: 2rem;
+            background: var(--bg-panel);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Markdown Styles */
+        #changelog-content ul {
+            padding-left: 25px;
+            margin-bottom: 1rem;
+        }
+
+        #changelog-content li {
+            margin-bottom: 5px;
+        }
+
+        #changelog-content p {
+            margin-bottom: 1rem;
+        }
+
+        #changelog-content hr {
+            border: 0;
+            border-top: 1px solid var(--border);
+            margin: 2rem 0;
+        }
+
+        #changelog-content strong {
+            color: #fff;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-family: 'Rajdhani', sans-serif;
+            animation: pulse 1s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from {
+                opacity: 0.5;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .error-msg {
+            color: var(--secondary);
+            text-align: center;
+            padding: 2rem;
+            border: 1px solid var(--secondary);
+            background: rgba(255, 0, 85, 0.1);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="index.html" class="logo">
+            <img src="https://lh3.googleusercontent.com/d/1v1KGBnV6JTR2wVSUWwRN07nMLgg98WBZ" alt="RolemIAster Logo">
+            <span>RolemIAster</span>
+        </a>
+        <div class="nav-links">
+            <a href="index.html">Inicio</a>
+            <a href="manual.html">Manual</a>
+            <a href="changelog.html" class="active">Changelog</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Registro de Cambios (Changelog)</h1>
+        <div id="changelog-content">
+            <div class="loading">Cargando últimas novedades...</div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const contentDiv = document.getElementById('changelog-content');
+
+            // Configurar Marked para que renderice saltos de línea como <br>
+            marked.setOptions({
+                breaks: true,
+                gfm: true
+            });
+
+            fetch('changelog_produccion.md?t=' + new Date().getTime()) // Anti-cache
+                .then(response => {
+                    if (!response.ok) throw new Error("No se pudo cargar el archivo de registro.");
+                    return response.text();
+                })
+                .then(markdown => {
+                    // Pre-procesamiento opcional si queremos quitar ciertas líneas o headers extraños
+                    // Por ahora renderizamos el markdown tal cual
+                    contentDiv.innerHTML = marked.parse(markdown);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    contentDiv.innerHTML = `
+                        <div class="error-msg">
+                            <h3>Error de Carga</h3>
+                            <p>No se pudo obtener el historial de cambios.<br>Intenta recargar la página.</p>
+                        </div>
+                    `;
+                });
+        });
+    </script>
+
+</body>
+
+</html>
