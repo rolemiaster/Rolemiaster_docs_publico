@@ -1,10 +1,23 @@
 ****************************************************************************************************
-26/01/2026 04:45 - Estabilización SDIA y Corrección de Comercios - Beta_v045
+26/01/2026 19:38 - Launcher Web & RTX 50 Support - Beta_v047
 ****************************************************************************************************
 - Novedades:
-  Hemos reforzado la estabilidad del juego para que nunca se quede colgado al iniciar. Además, los vendedores han vuelto de sus vacaciones en el limbo: ahora aparecen correctamente, tienen mercancía en las estanterías y respetan la ambientación del mundo (nada de pociones mágicas en el futuro).
+  *Soporte Crítico para RTX Serie 50: Solucionado un error grave que provocaba el cierre inesperado al intentar generar personajes en las nuevas tarjetas gráficas NVIDIA (RTX 5070, 5080, 5090).
+  (Como no dispongo de una RTX de la serie 5000 no he podido probar directamente si la solución es 100%, pero la teoría es que debería estar solucionado. ¡Espero vuestros cánticos de victoria aquí!)
+  
+  *Actualización del Motor de IA: Hemos actualizado el cerebro local del juego para que sea compatible con la última tecnología de hardware, asegurando que todos puedan disfrutar de la experiencia sin conexión, sin importar lo moderno que sea su equipo.
+  
+  *Nuevo Launcher: Actualizaciones y noticias en tiempo real desde la web oficial.
 
-  Se ha arreglado el bug que no permitía modificar los parámetros de IA y la selección del modelo de IA, haciendo que algunos usuarios con VRAM limitada no pudiesen jugar.
+****************************************************************************************************
+26/01/2026 06:49 - Integración Web Documentación - Beta_v045
+****************************************************************************************************
+- Novedades:
+  *Ahora el Manual de Usuario y el Registro de Cambios se cargan directamente desde nuestra web oficial, garantizando que siempre tengas la información más actualizada sin necesidad de descargar parches. Incluye modo offline inteligente.
+
+  *Hemos reforzado la estabilidad del juego para que nunca se quede colgado al iniciar. Además, los vendedores han vuelto de sus vacaciones en el limbo: ahora aparecen correctamente, tienen mercancía en las estanterías y respetan la ambientación del mundo (nada de pociones mágicas en el futuro).
+
+  *Se ha arreglado el bug que no permitía modificar los parámetros de IA y la selección del modelo de IA, haciendo que algunos usuarios con VRAM limitada no pudiesen jugar.
   **En caso de necesidad de modificar los parámetros de IA, recomiendo encarecidamente probar primero bajando el % de VRAM a 85%, reiniciar y probar, si esto sigue sin ser suficiente, recomiendo revisar que la VRAM de la GPU no esté siendo usada por otros procesos que no sean del propio juego (reinicio de pc si es necesario, cierre de aplicaciones que puedan ocupar VRAM). si después de bajar la cantidad de vram incluso hasta el 70%, sigue sin funcionar, no recomiendo seguir bajando porque el juego no podrá gestionar los prompts que se envían a la IA, por lo que aunque se consiga evitar el desbordamiento de VRAM, el juego no podrá funcionar porque no tiene con qué hacerlo, en ese caso la única opción restante es bajar de modelo a uno inferior, volver a colocar los parámetros de IA en automático y reiniciar.
 
 ****************************************************************************************************
@@ -29,4 +42,3 @@
 ****************************************************************************************************
 - Description:
   Exposicion de datos de biografia para UI y ajustes de i18n.
-
