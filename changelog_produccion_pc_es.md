@@ -1,8 +1,20 @@
 ****************************************************************************************************
+30/01/2026 05:00 - Web Manual & Connection Fixes - Beta_v051
+****************************************************************************************************
+- Novedades:
+  * **Selector de Texto Manual Dinámico:** Ahora puedes elegir el idioma del manual independientemente del idioma de la web. Se acabaron los selectores vacíos; ahora solo verás los manuales que realmente existen.
+  * **Adiós Error 403:** Solucionado el problema de conexión que impedía ver el registro de cambios (Changelog) dentro de la app. Ahora nos identificamos correctamente ante el servidor.
+  * **Manual con Humor:** Actualizado el manual en español con toques más divertidos y 'roleros'.
+
+****************************************************************************************************
 30/01/2026 02:09 - Multi-GPU & Stability Update - Beta_v050
 ****************************************************************************************************
 - Novedades:
-   **¡Potencia Multi-GPU y Estabilidad Blindada!**  *   **Soporte Multi-GPU:** Divide modelos gigantes entre todas tus tarjetas gráficas. *   **Cero Crashes:** Motor blindado con todas las librerías DLL necesarias. *   **Conexión:** Arreglado el acceso al manual online. *   **Idiomas:** 100% textos revisados.
+  **¡Potencia Multi-GPU y Estabilidad Blindada!**
+  * **Soporte Multi-GPU:** Divide modelos gigantes entre todas tus tarjetas gráficas.
+  * **Cero Crashes:** Motor blindado con todas las librerías DLL necesarias.
+  * **Conexión:** Arreglado el acceso al manual online.
+  * **Idiomas:** 100% textos revisados.
 
 ****************************************************************************************************
 28/01/2026 22:49 - Estabilización y Mejoras de IA - Beta_v049
