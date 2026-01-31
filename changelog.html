@@ -294,7 +294,7 @@
         function loadChangelog() {
             const contentDiv = document.getElementById('changelog-content');
             // Filename format: changelog_produccion_pc_es.md
-            const changelogFile = `changelog_produccion_${currentPlatform}_${currentLang}.md`;
+            const changelogFile = `changelog/changelog_produccion_${currentPlatform}_${currentLang}.md`;
 
             const loadingText = currentLang === 'en' ? 'Loading...' : 'Cargando...';
             contentDiv.innerHTML = `<div class="loading">${loadingText}</div>`;
