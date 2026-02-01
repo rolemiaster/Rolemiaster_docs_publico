@@ -253,6 +253,30 @@
             border-radius: 0 0 0 5px;
             font-family: 'Rajdhani', sans-serif;
         }
+
+        /* Custom Select Styling */
+        .custom-select {
+            padding: 8px 15px;
+            background-color: var(--bg-panel);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1rem;
+            cursor: pointer;
+            min-width: 200px;
+            outline: none;
+        }
+
+        .custom-select:hover {
+            border-color: var(--primary);
+        }
+
+        .custom-select option {
+            background-color: var(--bg-panel);
+            color: var(--text-main);
+            padding: 10px;
+        }
     </style>
 </head>
 
@@ -289,8 +313,7 @@
 
         <!-- Language Dropdown (New position above filters) -->
         <div class="lang-selector-container" style="display: flex; justify-content: center; margin-bottom: 15px;">
-            <select id="changelog-lang-select" onchange="changeChangelogLanguage(this.value)"
-                style="padding: 8px 15px; background: rgba(0,0,0,0.3); color: var(--text-main); border: 1px solid var(--border); border-radius: 4px; font-family: 'Rajdhani', sans-serif; font-size: 1rem; cursor: pointer; min-width: 200px;">
+            <select id="changelog-lang-select" class="custom-select" onchange="changeChangelogLanguage(this.value)">
                 <option value="es">Cargando idiomas...</option>
             </select>
         </div>
