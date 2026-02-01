@@ -134,7 +134,8 @@
         }
 
         .btn-plat,
-        .btn-lang {
+        .btn-lang,
+        .btn-filter {
             background: rgba(0, 0, 0, 0.3);
             border: none;
             border-right: 1px solid var(--border);
@@ -147,18 +148,21 @@
         }
 
         .btn-plat:last-child,
-        .btn-lang:last-child {
+        .btn-lang:last-child,
+        .btn-filter:last-child {
             border-right: none;
         }
 
         .btn-plat:hover,
-        .btn-lang:hover {
+        .btn-lang:hover,
+        .btn-filter:hover {
             color: var(--primary);
             background: rgba(0, 210, 255, 0.1);
         }
 
         .btn-plat.active,
-        .btn-lang.active {
+        .btn-lang.active,
+        .btn-filter.active {
             background: var(--primary);
             color: #000;
             font-weight: bold;
@@ -264,11 +268,11 @@
             <a href="manual.html">Manual</a>
             <a href="changelog.html" class="active">Changelog</a>
 
-            <!-- Filter Selector -->
+            <!-- Filter Selector (First, as requested by logical flow) -->
             <div class="selector-group">
                 <button id="btn-filter-stable" class="btn-filter active" onclick="setFilter('stable')">Estable</button>
-                <button id="btn-filter-exp" class="btn-filter" onclick="setFilter('experimental')">Experimental</button>
-                <button id="btn-filter-all" class="btn-filter" onclick="setFilter('all')">Todo</button>
+                <button id="btn-filter-exp" class="btn-filter" onclick="setFilter('experimental')">Exp. Only</button>
+                <button id="btn-filter-all" class="btn-filter" onclick="setFilter('all')">All</button>
             </div>
 
             <!-- Platform Selector -->
