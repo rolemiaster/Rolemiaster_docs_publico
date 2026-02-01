@@ -276,7 +276,7 @@
                 <button id="btn-android" class="btn-plat" onclick="switchPlatform('android')">Android</button>
             </div>
 
-            <!-- Language Selector -->
+            <!-- Language Selector (Global UI) -->
             <div class="selector-group">
                 <button id="btn-es" class="btn-lang active" onclick="switchLanguage('es')">ES</button>
                 <button id="btn-en" class="btn-lang" onclick="switchLanguage('en')">EN</button>
@@ -286,6 +286,14 @@
 
     <div class="container">
         <h1>Registro de Cambios (Changelog)</h1>
+
+        <!-- Language Dropdown (New position above filters) -->
+        <div class="lang-selector-container" style="display: flex; justify-content: center; margin-bottom: 15px;">
+            <select id="changelog-lang-select" onchange="changeChangelogLanguage(this.value)"
+                style="padding: 8px 15px; background: rgba(0,0,0,0.3); color: var(--text-main); border: 1px solid var(--border); border-radius: 4px; font-family: 'Rajdhani', sans-serif; font-size: 1rem; cursor: pointer; min-width: 200px;">
+                <option value="es">Cargando idiomas...</option>
+            </select>
+        </div>
 
         <!-- Filter Selector (Centered) -->
         <div class="filter-controls" style="display: flex; justify-content: center; margin-bottom: 20px;">
@@ -304,8 +312,11 @@
     <script>
         // Load preferences or defaults
         let currentPlatform = localStorage.getItem('rolemiaster_platform') || 'pc';
-        let currentLang = localStorage.getItem('rolemiaster_lang') || 'es';
-        let currentFilter = localStorage.getItem('rolemiaster_filter') || 'stable'; // stable, experimental, all
+        let currentLang = localStorage.getItem('rolemiaster_lang') || 'es'; // Interface
+        let currentFilter = localStorage.getItem('rolemiaster_filter') || 'stable';
+        let currentChangelogLang = localStorage.getItem('rolemiaster_changelog_view_lang');
+
+        let availableLanguages = [];
 
         function switchPlatform(plat) {
             currentPlatform = plat;
@@ -318,6 +329,14 @@
             currentLang = lang;
             localStorage.setItem('rolemiaster_lang', lang);
             updateButtons();
+            // Update labels but do NOT auto-switch content lang (user preference)
+            renderFilterLabels();
+            loadChangelog();
+        }
+
+        function changeChangelogLanguage(code) {
+            currentChangelogLang = code;
+            localStorage.setItem('rolemiaster_changelog_view_lang', code);
             loadChangelog();
         }
 
@@ -340,20 +359,72 @@
             // Filter
             document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
             let filterId = 'btn-filter-' + (currentFilter === 'all' ? 'all' : (currentFilter === 'experimental' ? 'exp' : 'stable'));
-            // Map 'stable' to btn-filter-stable, 'experimental' to exp.
             const btn = document.getElementById(filterId);
             if (btn) btn.classList.add('active');
 
-            // Update labels based on lang
+            renderFilterLabels();
+        }
+
+        function renderFilterLabels() {
+            // Update UI labels based on interface lang
             const isEs = currentLang === 'es';
             document.getElementById('btn-filter-stable').innerText = isEs ? 'Estable' : 'Stable';
             document.getElementById('btn-filter-exp').innerText = isEs ? 'Solo Exp.' : 'Exp. Only';
             document.getElementById('btn-filter-all').innerText = isEs ? 'Todo' : 'All';
+            // Also update dropdown placeholder if needed (but usually it's overwritten by options)
+        }
+
+        function initChangelog() {
+            // Use dedicated changelog manifest
+            fetch('changelog/changelog_manifest.json?t=' + new Date().getTime())
+                .then(r => r.json())
+                .then(data => {
+                    availableLanguages = data.languages;
+                    populateLanguageDropdown();
+                    loadChangelog();
+                })
+                .catch(e => {
+                    console.error("Manifest Error", e);
+                    // Fallback
+                    availableLanguages = [
+                        { code: 'es', name: 'Español (Spanish)' },
+                        { code: 'en', name: 'English' }
+                    ];
+                    populateLanguageDropdown();
+                    loadChangelog();
+                });
+        }
+
+        function populateLanguageDropdown() {
+            const select = document.getElementById('changelog-lang-select');
+            select.innerHTML = '';
+
+            // Default logic
+            if (!currentChangelogLang) {
+                currentChangelogLang = currentLang;
+            }
+
+            // Validate
+            const exists = availableLanguages.find(l => l.code === currentChangelogLang);
+            if (!exists && availableLanguages.length > 0) {
+                // Try strict fallback
+                currentChangelogLang = availableLanguages[0].code;
+            }
+
+            availableLanguages.forEach(lang => {
+                const opt = document.createElement('option');
+                opt.value = lang.code;
+                opt.textContent = lang.name;
+                if (lang.code === currentChangelogLang) opt.selected = true;
+                select.appendChild(opt);
+            });
         }
 
         function loadChangelog() {
             const contentDiv = document.getElementById('changelog-content');
-            const changelogFile = `changelog/changelog_produccion_${currentPlatform}_${currentLang}.md`;
+
+            let langCode = currentChangelogLang || 'es';
+            const changelogFile = `changelog/changelog_produccion_${currentPlatform}_${langCode}.md`;
 
             const loadingText = currentLang === 'en' ? 'Loading...' : 'Cargando...';
             contentDiv.innerHTML = `<div class="loading">${loadingText}</div>`;
@@ -483,7 +554,7 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             updateButtons();
-            loadChangelog();
+            initChangelog(); // Starts the flow
         });
     </script>
 </body>
