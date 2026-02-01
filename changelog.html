@@ -226,6 +226,29 @@
             background: rgba(255, 0, 85, 0.1);
             border-radius: 8px;
         }
+
+        .experimental-block {
+            border-left: 4px solid #ffaa00;
+            background: rgba(255, 170, 0, 0.05);
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 0 5px 5px 0;
+            position: relative;
+        }
+
+        .experimental-block::after {
+            content: "EXPERIMENTAL";
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: #ffaa00;
+            color: #000;
+            font-size: 0.7rem;
+            padding: 2px 5px;
+            font-weight: bold;
+            border-radius: 0 0 0 5px;
+            font-family: 'Rajdhani', sans-serif;
+        }
     </style>
 </head>
 
@@ -240,6 +263,13 @@
             <a href="index.html">Inicio</a>
             <a href="manual.html">Manual</a>
             <a href="changelog.html" class="active">Changelog</a>
+
+            <!-- Filter Selector -->
+            <div class="selector-group">
+                <button id="btn-filter-stable" class="btn-filter active" onclick="setFilter('stable')">Estable</button>
+                <button id="btn-filter-exp" class="btn-filter" onclick="setFilter('experimental')">Experimental</button>
+                <button id="btn-filter-all" class="btn-filter" onclick="setFilter('all')">Todo</button>
+            </div>
 
             <!-- Platform Selector -->
             <div class="selector-group">
@@ -266,6 +296,7 @@
         // Load preferences or defaults
         let currentPlatform = localStorage.getItem('rolemiaster_platform') || 'pc';
         let currentLang = localStorage.getItem('rolemiaster_lang') || 'es';
+        let currentFilter = localStorage.getItem('rolemiaster_filter') || 'stable'; // stable, experimental, all
 
         function switchPlatform(plat) {
             currentPlatform = plat;
@@ -281,19 +312,38 @@
             loadChangelog();
         }
 
+        function setFilter(filter) {
+            currentFilter = filter;
+            localStorage.setItem('rolemiaster_filter', currentFilter);
+            updateButtons();
+            applyFilterDisplay();
+        }
+
         function updateButtons() {
-            // Platform Buttons
+            // Platform
             document.querySelectorAll('.btn-plat').forEach(b => b.classList.remove('active'));
             document.getElementById('btn-' + currentPlatform).classList.add('active');
 
-            // Language Buttons
+            // Language
             document.querySelectorAll('.btn-lang').forEach(b => b.classList.remove('active'));
             document.getElementById('btn-' + currentLang).classList.add('active');
+
+            // Filter
+            document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
+            let filterId = 'btn-filter-' + (currentFilter === 'all' ? 'all' : (currentFilter === 'experimental' ? 'exp' : 'stable'));
+            // Map 'stable' to btn-filter-stable, 'experimental' to exp.
+            const btn = document.getElementById(filterId);
+            if (btn) btn.classList.add('active');
+
+            // Update labels based on lang
+            const isEs = currentLang === 'es';
+            document.getElementById('btn-filter-stable').innerText = isEs ? 'Estable' : 'Stable';
+            document.getElementById('btn-filter-exp').innerText = isEs ? 'Solo Exp.' : 'Exp. Only';
+            document.getElementById('btn-filter-all').innerText = isEs ? 'Todo' : 'All';
         }
 
         function loadChangelog() {
             const contentDiv = document.getElementById('changelog-content');
-            // Filename format: changelog_produccion_pc_es.md
             const changelogFile = `changelog/changelog_produccion_${currentPlatform}_${currentLang}.md`;
 
             const loadingText = currentLang === 'en' ? 'Loading...' : 'Cargando...';
@@ -303,24 +353,123 @@
 
             fetch(changelogFile + '?t=' + new Date().getTime())
                 .then(response => {
-                    if (!response.ok) throw new Error("No se pudo cargar el archivo de registro.");
+                    if (!response.ok) throw new Error("Fetch Error");
                     return response.text();
                 })
                 .then(markdown => {
-                    contentDiv.innerHTML = marked.parse(markdown);
+                    renderChangelog(markdown);
                 })
                 .catch(error => {
                     console.error('Error:', error);
                     const errorHeader = currentLang === 'en' ? 'Load Error' : 'Error de Carga';
                     const errorMsg = currentLang === 'en' ? 'File not found' : 'No se encontró el changelog';
-
                     contentDiv.innerHTML = `
                         <div class="error-msg">
                             <h3>${errorHeader}</h3>
                             <p>${errorMsg}: ${changelogFile}</p>
-                        </div>
-                    `;
+                        </div>`;
                 });
+        }
+
+        function renderChangelog(markdownText) {
+            const contentDiv = document.getElementById('changelog-content');
+            contentDiv.innerHTML = ''; // Clear
+
+            // Split logic: Separator is usually ****************************************************************************************************
+            // Regex to find separator lines
+            const lines = markdownText.split(/\r?\n/);
+            let blocks = [];
+            let currentBlockLines = [];
+            let isExperimental = false;
+
+            // Helper to close block
+            const pushBlock = () => {
+                if (currentBlockLines.length > 0) {
+                    blocks.push({
+                        text: currentBlockLines.join('\n'),
+                        experimental: isExperimental
+                    });
+                }
+                currentBlockLines = [];
+                isExperimental = false;
+            };
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                // Check for separator (at least 20 stars)
+                if (/^\*{20,}$/.test(line.trim())) {
+                    // It is a separator.
+                    // Usually the structure is:
+                    // SEP
+                    // Title Line (Contains Date - Title - Version)
+                    // SEP
+
+                    // If we are starting a new block, push old one
+                    // But we encounter separators twice per header.
+
+                    // Look ahead logic:
+                    if (i + 1 < lines.length) {
+                        const nextLine = lines[i + 1];
+                        // If next line is a header text, and line after that is separator...
+                        if (i + 2 < lines.length && /^\*{20,}$/.test(lines[i + 2].trim())) {
+                            // Yes, this is a header start.
+                            pushBlock(); // Close previous body
+
+                            // Check experimental status
+                            if (nextLine.toUpperCase().includes("EXPERIMENTAL")) {
+                                isExperimental = true;
+                            }
+
+                            // Add these 3 header lines to the new block
+                            currentBlockLines.push(line);
+                            currentBlockLines.push(nextLine);
+                            currentBlockLines.push(lines[i + 2]);
+
+                            i += 2; // Skip next 2 lines
+                            continue;
+                        }
+                    }
+                }
+                currentBlockLines.push(line);
+            }
+            pushBlock(); // Last block
+
+            // Render blocks
+            blocks.forEach(block => {
+                if (!block.text.trim()) return;
+
+                const div = document.createElement('div');
+                div.className = 'changelog-entry';
+                if (block.experimental) {
+                    div.classList.add('experimental-block');
+                }
+
+                div.innerHTML = marked.parse(block.text);
+                contentDiv.appendChild(div);
+            });
+
+            applyFilterDisplay();
+        }
+
+        function applyFilterDisplay() {
+            const allEntries = document.querySelectorAll('.changelog-entry');
+            allEntries.forEach(entry => {
+                const isExp = entry.classList.contains('experimental-block');
+
+                if (currentFilter === 'stable') {
+                    // Hide Experimental, Show Stable
+                    entry.style.display = isExp ? 'none' : 'block';
+                } else if (currentFilter === 'experimental') {
+                    // Show ONLY Experimental (User req: "solo exp" or "exp view"?)
+                    // Re-read user: "si un jugador está usando... experimental, que vea el changelog completo" -> Actually that means "All".
+                    // But filter options requested: "main, experimental (only?), or both".
+                    // Let's interpret 'experimental' filter as 'Only Experimental entries'.
+                    entry.style.display = isExp ? 'block' : 'none';
+                } else {
+                    // All
+                    entry.style.display = 'block';
+                }
+            });
         }
 
         document.addEventListener('DOMContentLoaded', () => {
